@@ -27,6 +27,7 @@ from skywalking import config, plugins
 from skywalking import loggings
 from skywalking import meter
 from skywalking import profile
+from skywalking import sampling
 from skywalking.agent.protocol import Protocol
 from skywalking.command import command_service
 from skywalking.loggings import logger
@@ -265,6 +266,8 @@ class SkyWalkingAgent(Singleton):
             profile.init()
         if config.agent_meter_reporter_active:
             meter.init(force=True)  # force re-init after fork()
+        if config.sample_n_per_3_secs > 0:
+            sampling.init(force=True)
 
         self.__bootstrap()  # calls init_threading
 
@@ -362,6 +365,8 @@ class SkyWalkingAgent(Singleton):
             self.__log_queue.put(log_data, block=False)
         except Full:
             logger.warning('the queue is full, the log will be abandoned')
+        except AttributeError:
+            pass
 
     def archive_meter(self, meter_data: 'MeterData'):
         try:

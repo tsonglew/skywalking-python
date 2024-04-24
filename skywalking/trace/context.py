@@ -20,6 +20,7 @@ from skywalking import Component, config
 from skywalking import profile
 from skywalking.agent import agent
 from skywalking.profile.profile_status import ProfileStatusReference
+from skywalking.sampling import get_sampling_service
 from skywalking.trace import ID
 from skywalking.trace.carrier import Carrier
 from skywalking.trace.segment import Segment, SegmentRef
@@ -324,5 +325,8 @@ def get_context() -> SpanContext:
 
     if spans:
         return spans[-1].context
+
+    if not get_sampling_service() or not get_sampling_service().try_sampling():
+        return NoopContext()
 
     return SpanContext()

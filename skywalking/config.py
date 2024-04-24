@@ -209,6 +209,8 @@ plugin_fastapi_collect_http_params: bool = os.getenv('SW_PLUGIN_FASTAPI_COLLECT_
 plugin_bottle_collect_http_params: bool = os.getenv('SW_PLUGIN_BOTTLE_COLLECT_HTTP_PARAMS', '').lower() == 'true'
 # The maximum length of `celery` functions parameters, longer than this will be truncated, 0 turns off
 plugin_celery_parameters_length: int = int(os.getenv('SW_PLUGIN_CELERY_PARAMETERS_LENGTH', '512'))
+# Negative or zero means off, by default.SAMPLE_N_PER_3_SECS means sampling N TraceSegment in 3 seconds tops.
+sample_n_per_3_secs: int = int(os.getenv('SW_AGENT_SAMPLE', '0'))
 
 # THIS MUST FOLLOW DIRECTLY AFTER LIST OF CONFIG OPTIONS!
 options = [key for key in globals() if key not in options]  # THIS MUST FOLLOW DIRECTLY AFTER LIST OF CONFIG OPTIONS!
