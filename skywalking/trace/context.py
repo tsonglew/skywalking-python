@@ -28,6 +28,7 @@ from skywalking.trace.span import Span, Kind, NoopSpan, EntrySpan, ExitSpan
 from skywalking.utils.counter import Counter
 from skywalking.utils.exception import IllegalStateError
 from skywalking.utils.time import current_milli_time
+from skywalking.sampling.sampling_service import sampling_service
 
 try:  # attempt to use async-local instead of thread-local context and spans
     import contextvars
@@ -326,5 +327,8 @@ def get_context() -> SpanContext:
 
     if spans:
         return spans[-1].context
+
+    if not sampling_service.try_sampling():
+        return NoopContext()
 
     return SpanContext()
